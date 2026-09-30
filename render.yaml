@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: eziehe-premium-music-bot
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: false
+    healthCheckPath: /api/healthz
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: AUDD_API_TOKEN
+        sync: false

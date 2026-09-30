@@ -17,6 +17,23 @@ short uploaded audio or video clip.
 This project uses the Replit pnpm workspace. The API server starts the Telegram
 bot and exposes its health endpoint at `/api/healthz`.
 
+## Deploy to Render
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/ezihe-building/Telegram-music-downloader-)
+
+The repository includes a Render Blueprint and Dockerfile. The container installs
+the required `ffmpeg` and `yt-dlp` tools, builds the bot, and runs the Telegram
+long-polling worker as a web service with `/api/healthz` as its health check.
+
+When the Deploy to Render button opens, Render asks for:
+
+- `TELEGRAM_BOT_TOKEN` — create with BotFather.
+- `AUDD_API_TOKEN` — required only for recognizing uploaded audio/video clips.
+
+These values are intentionally marked `sync: false` in `render.yaml`. They must
+be entered in Render's secure environment-variable form rather than committed
+to GitHub, where anyone could read them.
+
 Required secrets:
 
 - `TELEGRAM_BOT_TOKEN` — create with BotFather.

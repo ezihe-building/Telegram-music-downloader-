@@ -97,6 +97,13 @@ type SendAudioOptions = {
   replyMarkup?: { inline_keyboard: InlineKeyboardButton[][] };
 };
 
+type SendPhotoOptions = {
+  chatId: number;
+  photoPath: string;
+  caption?: string;
+  replyMarkup?: { inline_keyboard: InlineKeyboardButton[][] };
+};
+
 function sanitizeTelegramString(value: string): string {
   let result = "";
   for (let index = 0; index < value.length; index += 1) {
@@ -196,6 +203,22 @@ export class TelegramClient {
       chat_id: chatId,
       action,
     });
+  }
+
+  async sendPhoto(options: SendPhotoOptions): Promise<TelegramMessage> {
+    const photo = await readFile(options.photoPath);
+    const form = new FormData();
+    form.append("chat_id", String(options.chatId));
+    form.append("photo", new Blob([photo], { type: "image/png" }), "ezihe-anime.png");
+    if (options.caption) {
+      form.append("caption", sanitizeTelegramString(options.caption));
+      form.append("parse_mode", "HTML");
+    }
+    if (options.replyMarkup) {
+      form.append("reply_markup", JSON.stringify(sanitizeTelegramPayload(options.replyMarkup)));
+    }
+
+    return this.callMultipart<TelegramMessage>("sendPhoto", form);
   }
 
   async sendAudio(options: SendAudioOptions): Promise<TelegramMessage> {
