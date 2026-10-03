@@ -1,13 +1,13 @@
 kind = "api"
-previewPath = "/api" # TODO - should be excluded from preview in the first place
-title = "API Server"
+previewPath = "/"
+title = "Ezihe Music Bot"
 version = "1.0.0"
 id = "3B4_FFSkEVBkAeYMFRJ2e"
 
 [[services]]
 localPort = 8080
 name = "API Server"
-paths = ["/api"]
+paths = ["/"]
 
 [services.development]
 run = "pnpm --filter @workspace/api-server run dev"
@@ -27,6 +27,7 @@ args = ["node", "--enable-source-maps", "artifacts/api-server/dist/index.mjs"]
 [services.production.run.env]
 PORT = "8080"
 NODE_ENV = "production"
+RUN_TELEGRAM_BOT = "true"
 
 [services.production.health.startup]
 path = "/api/healthz"

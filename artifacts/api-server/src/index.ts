@@ -23,8 +23,15 @@ app.listen(port, (err) => {
   }
 
   logger.info({ port }, "Server listening");
-  startTelegramBot().catch((error) => {
-    logger.error({ err: error }, "Telegram music bot failed to start");
-    process.exit(1);
-  });
+  const shouldRunTelegramBot = process.env["NODE_ENV"] === "production"
+    ? process.env["RUN_TELEGRAM_BOT"] !== "false"
+    : process.env["RUN_TELEGRAM_BOT"] === "true";
+  if (!shouldRunTelegramBot) {
+    logger.info("Telegram bot polling disabled for the development website preview");
+  } else {
+    startTelegramBot().catch((error) => {
+      logger.error({ err: error }, "Telegram music bot failed to start");
+      process.exit(1);
+    });
+  }
 });
